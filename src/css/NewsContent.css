@@ -1,0 +1,42 @@
+/* .news-card{
+    border: 1px solid #000;
+    border-radius: 50px;
+    width: 300px;
+    height: 300px;
+} */
+
+
+
+/* .news-card>img{
+    width: 100%;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    height: 200px;
+} */
+
+.card-container{
+    width: 90vw;
+    max-width: 260px;
+    height: 300px;
+}
+
+.news-card{
+    position: relative;
+    background-color: #fff;
+    width: 80vw;
+    max-width: 260px;
+    height: 300px;
+    border: 1px solid #000;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+}
+
+.news-card>img{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.swipe{
+    position:absolute;
+}

@@ -1,17 +1,13 @@
 import React from 'react'
-import Sidebar from '../components/Sidebar'
-import Carousel from '../components/Carousel'
+import NewsContent from '../components/NewsContent'
+import Nbar from '../components/Nbar'
 const PgTwo = () => {
   return (
 
-      <div style={{display:'grid', gridTemplateColumns:'1fr 2fr'}}>
-        <div>
-          <Sidebar />
-        </div>
-        <div>
-          {/* <Carousel /> */}
-        </div>
-      </div>
+    <>
+      <Nbar/>
+      <NewsContent/>
+    </>
 
   )
 }
