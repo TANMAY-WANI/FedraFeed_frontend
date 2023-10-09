@@ -12,6 +12,7 @@ import { useState, useMemo, useRef } from 'react'
 const NewsContent = () => {
   const [newsData,setNewsData]= useState([])
   const [currentIndex, setCurrentIndex] = useState(newsData.length - 1)
+  const [fetches,setFetches]= useState(0);
   // const [lastDirection, setLastDirection] = useState()
   const [countSwipes,setSwipeCount] = useState(0);
   // used for outOfFrame closure
@@ -33,7 +34,7 @@ const NewsContent = () => {
       console.log(error);
     });
 
-  }, []);
+  }, [fetches]);
   const updateCurrentIndex = (val) => {
     setCurrentIndex(val)
     currentIndexRef.current = val
@@ -49,8 +50,8 @@ const NewsContent = () => {
     console.log('removing: ' + categoryToDelete)
     setSwipeCount(countSwipes+1);
     updateCurrentIndex(index - 1);
-    if (countSwipes === 10) {
-      //do something
+    if (countSwipes >= 9) {
+      setFetches(fetches+1);
       console.log('10 swipes done');
       setSwipeCount(0);
     }
@@ -58,7 +59,7 @@ const NewsContent = () => {
 
   const outOfFrame = (category, idx) => {
     console.log(`${category} (${idx}) left the screen!`, currentIndexRef.current)
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard()
+    // currentIndexRef.current >= idx && childRefs[idx].current.restoreCard()
 
   }
 
@@ -69,7 +70,7 @@ const NewsContent = () => {
   }
 
   return (
-    <div style={{ alignContent: 'center', marginLeft: '40%', marginTop: '10%' }}>
+    <div style={{ alignContent: 'center', marginLeft: '10%', marginTop: '10%' }}>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"></link>
       <div className='card-container'>
         {newsData.map((news, index) => (
@@ -82,14 +83,14 @@ const NewsContent = () => {
           >
             <div className='news-card'>
               <img src={news.image} alt=""  height={200} width={260}/>
-                <h2>{news.headline}</h2> 
+                <h2><a target='_blank' href={news.link}>{news.headline}</a></h2> 
             </div>
           </TinderCard>
         ))}
       </div>
-
-      <button className='btn btn-primary' style={{marginTop:'20px',marginLeft:'20px'}} onClick={() => swipe('left')}>Swipe left!</button>
-      <button className='btn btn-primary' style={{marginTop:'20px',marginLeft:'20px'}} onClick={() => swipe('right')}>Swipe right!</button>
+      
+      <button className='btn btn-primary' style={{marginTop:'100px',marginLeft:'20px'}} onClick={() => swipe('left')}>Swipe left!</button>
+      <button className='btn btn-primary' style={{marginTop:'100px',marginLeft:'20px'}} onClick={() => swipe('right')}>Swipe right!</button>
 
     </div>
 
