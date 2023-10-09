@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TinderCard from 'react-tinder-card'
 import '../css/NewsContent.css'
-import db from './db'
+// import db from './db'
+import axios from 'axios'
 import { useState, useMemo, useRef } from 'react'
 // ...
 
@@ -9,20 +10,31 @@ import { useState, useMemo, useRef } from 'react'
 
 //db is the list of news coming from the api
 const NewsContent = () => {
-  const [currentIndex, setCurrentIndex] = useState(db.length - 1)
+  const [newsData,setNewsData]= useState([])
+  const [currentIndex, setCurrentIndex] = useState(newsData.length - 1)
+  const [fetches,setFetches]= useState(0);
   // const [lastDirection, setLastDirection] = useState()
   const [countSwipes,setSwipeCount] = useState(0);
   // used for outOfFrame closure
   const currentIndexRef = useRef(currentIndex)
-
   const childRefs = useMemo(
     () =>
-      Array(db.length)
+      Array(newsData.length)
         .fill(0)
-        .map((i) => React.createRef()),
-    []
-  )
+        .map(() => React.createRef()),
+    [newsData] // Make sure to update the refs array when newsData changes
+  );
+  useEffect(() => {
+    // Fetch data from your API or source
+    axios.get('http://localhost:5000/api/randnews/10').then((response) => {
+      console.log(response.data.headlines);
+      setNewsData(response.data.headlines);
+      setCurrentIndex(response.data.headlines.length - 1);
+    }).catch((error) => {
+      console.log(error);
+    });
 
+  }, [fetches]);
   const updateCurrentIndex = (val) => {
     setCurrentIndex(val)
     currentIndexRef.current = val
@@ -38,8 +50,8 @@ const NewsContent = () => {
     console.log('removing: ' + categoryToDelete)
     setSwipeCount(countSwipes+1);
     updateCurrentIndex(index - 1);
-    if (countSwipes === 10) {
-      //do something
+    if (countSwipes >= 9) {
+      setFetches(fetches+1);
       console.log('10 swipes done');
       setSwipeCount(0);
     }
@@ -47,38 +59,38 @@ const NewsContent = () => {
 
   const outOfFrame = (category, idx) => {
     console.log(`${category} (${idx}) left the screen!`, currentIndexRef.current)
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard()
+    // currentIndexRef.current >= idx && childRefs[idx].current.restoreCard()
 
   }
 
   const swipe = async (dir) => {
-    if (canSwipe && currentIndex < db.length) {
+    if (canSwipe && currentIndex < newsData.length) {
       await childRefs[currentIndex].current.swipe(dir) // Swipe the card!
     }
   }
 
   return (
-    <div style={{ alignContent: 'center', marginLeft: '40%', marginTop: '10%' }}>
+    <div style={{ alignContent: 'center', marginLeft: '10%', marginTop: '10%' }}>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"></link>
       <div className='card-container'>
-        {db.map((news, index) => (
+        {newsData.map((news, index) => (
           <TinderCard
             ref={childRefs[index]}
             className='swipe'
-            key={news.category}
-            onSwipe={(dir) => swiped(dir, news.category, index)}
-            onCardLeftScreen={() => outOfFrame(news.category, index)}
+            key={news.headline}
+            onSwipe={(dir) => swiped(dir, news.headline, index)}
+            onCardLeftScreen={() => outOfFrame(news.headline, index)}
           >
             <div className='news-card'>
-              <img src="/images/myImg.webp" alt=""  height={200} width={260}/>
-                <h2>{news.heading}</h2> 
+              <img src={news.image} alt=""  height={200} width={260}/>
+                <h2><a target='_blank' href={news.link}>{news.headline}</a></h2> 
             </div>
           </TinderCard>
         ))}
       </div>
-
-      <button className='btn btn-primary' style={{marginTop:'20px',marginLeft:'20px'}} onClick={() => swipe('left')}>Swipe left!</button>
-      <button className='btn btn-primary' style={{marginTop:'20px',marginLeft:'20px'}} onClick={() => swipe('right')}>Swipe right!</button>
+      
+      <button className='btn btn-primary' style={{marginTop:'100px',marginLeft:'20px'}} onClick={() => swipe('left')}>Swipe left!</button>
+      <button className='btn btn-primary' style={{marginTop:'100px',marginLeft:'20px'}} onClick={() => swipe('right')}>Swipe right!</button>
 
     </div>
 

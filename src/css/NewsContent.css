@@ -16,16 +16,17 @@
 
 .card-container{
     width: 90vw;
-    max-width: 260px;
+    /* max-width: 260px; */
     height: 300px;
 }
 
 .news-card{
     position: relative;
     background-color: #fff;
-    width: 80vw;
-    max-width: 260px;
-    height: 300px;
+    width: 40vw;
+    min-width: 500px;
+    /* max-width: 260px; */
+    height: 400px;
     border: 1px solid #000;
     border-radius: 20px;
     background-size: cover;
