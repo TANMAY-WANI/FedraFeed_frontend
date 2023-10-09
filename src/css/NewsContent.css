@@ -16,7 +16,7 @@
 
 .card-container{
     width: 90vw;
-    max-width: 260px;
+    /* max-width: 260px; */
     height: 300px;
 }
 
@@ -24,7 +24,7 @@
     position: relative;
     background-color: #fff;
     width: 80vw;
-    max-width: 260px;
+    /* max-width: 260px; */
     height: 300px;
     border: 1px solid #000;
     border-radius: 20px;
